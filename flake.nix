@@ -6,8 +6,6 @@
   inputs.nixpkgs.url = "github:nix-community/nixpkgs.lib";
   outputs = {nixpkgs, ...}: let
     l = nixpkgs.lib // builtins;
-
-    debug = false;
     pretty = l.generators.toPretty {};
 
     /*
@@ -27,7 +25,7 @@
     You can use this function independently of the rest of std.
     */
 
-    incl = src: allowedPaths: let
+    incl = debug: src: allowedPaths: let
       src' = l.unsafeDiscardStringContext (toString src);
       normalizedPaths =
         l.map (
@@ -47,7 +45,7 @@
         normalizedPaths;
       filter =
         l.traceIf debug "patterns: ${pretty patterns}"
-        isIncluded
+        (isIncluded debug)
         patterns;
     in
       l.cleanSourceWith {
@@ -65,7 +63,7 @@
       }
       paths;
 
-    isIncluded = patterns: _path: _type: let
+    isIncluded = debug: patterns: _path: _type: let
       traceCandidate = l.traceIf debug "candidate ${_type}: ${_path}";
     in
       traceCandidate (
@@ -85,5 +83,8 @@
         )
         patterns.prefixes
       );
-  in {__functor = _: incl;};
+  in {
+    debug = false;
+    __functor = {debug, ...}: incl debug;
+  };
 }
