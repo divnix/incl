@@ -3,9 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 {
-  inputs.nixpkgs.url = "github:nix-community/nixpkgs.lib";
-  outputs = {nixpkgs, ...}: let
-    l = nixpkgs.lib // builtins;
+  inputs.nixlib.url = "github:nix-community/nixpkgs.lib";
+  outputs = {nixlib, ...}: let
+    l = nixlib.lib // builtins;
     pretty = l.generators.toPretty {};
 
     /*
