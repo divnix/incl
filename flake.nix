@@ -70,16 +70,19 @@
         # add file or recurse into node ?
         l.any (
           pre: let
+            contains = _type == "directory" && l.hasPrefix _path pre;
             hit = l.hasPrefix pre _path;
           in
-            l.traceIf (debug && hit) (
-              if _type == "directory"
-              then "recurse on prefix: ${pre}"
+            l.traceIf (debug && (hit || contains)) (
+              if contains && !hit
+              then "\trecurse as container for: ${pre}"
+              else if _type == "directory"
+              then "\trecurse on prefix: ${pre}"
               else if _type == "regular"
-              then "include on prefix: ${pre}"
-              else "file type '${_type}' - will fail"
+              then "\tinclude on prefix: ${pre}"
+              else "\tfile type '${_type}' - will fail"
             )
-            hit
+            hit || contains
         )
         patterns.prefixes
       );
