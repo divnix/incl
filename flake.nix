@@ -71,15 +71,18 @@
         l.any (
           pre: let
             contains = _type == "directory" && l.hasPrefix _path pre;
-            hit = l.hasPrefix pre _path;
+            hit = pre == _path;
+            prefix = l.hasPrefix "${pre}/" _path;
           in
-            l.traceIf (debug && (hit || contains)) (
-              if contains && !hit
+            l.traceIf (debug && (hit || prefix || contains)) (
+              if contains && !(hit || prefix)
               then "\trecurse as container for: ${pre}"
               else if _type == "directory"
               then "\trecurse on prefix: ${pre}"
-              else if _type == "regular"
-              then "\tinclude on prefix: ${pre}"
+              else if _type == "regular" && hit
+              then "\tinclude on hit: ${pre}"
+              else if _type == "regular" && prefix
+              then "\tinclude on prefix: ${pre}/"
               else "\tfile type '${_type}' - will fail"
             )
             hit || contains
