@@ -8,7 +8,7 @@
   outputs = { incl, self }: {
     filteredSource = (incl // {debug = true;}) ./. [
       ./README.md
-      ./folder # and all below
+      ./folder/other # and all below
     ];
   };
 }
