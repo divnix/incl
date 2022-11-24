@@ -85,7 +85,9 @@
               then "\tinclude on prefix: ${pre}/"
               else "\tfile type '${_type}' - will fail"
             )
-            hit || contains
+            hit
+            || prefix
+            || contains
         )
         patterns.prefixes
       );
