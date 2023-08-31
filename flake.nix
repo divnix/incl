@@ -70,7 +70,7 @@
         # add file or recurse into node ?
         l.any (
           pre: let
-            contains = _type == "directory" && l.hasPrefix _path pre;
+            contains = _type == "directory" && l.hasPrefix "${_path}/" pre;
             hit = pre == _path;
             prefix = l.hasPrefix "${pre}/" _path;
           in
